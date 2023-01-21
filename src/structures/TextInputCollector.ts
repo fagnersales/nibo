@@ -6,6 +6,7 @@ export const TextInputCollectorOnFailedReasons = {
   LengthIsLessThanMinimum: 'LengthIsLessThanMinimum',
   LengthIsGreatherThanMaximum: 'LengthIsGreatherThanMaximum',
   PatternDoesNotMatch: 'PatternDoesNotMatch',
+  OtherFilterFailed: 'OtherFilterFailed',
   Unknown: 'Unknown'
 } as const
 
@@ -15,6 +16,7 @@ interface TextInputCollectorProps {
   maxLength?: number
   pattern?: RegExp
   silent?: boolean
+  otherFilter?: (content: string) => boolean | Promise<boolean>
   onFailedFilter?: (collector: MessageCollector, message: Message, reason: keyof typeof TextInputCollectorOnFailedReasons) => any
 }
 
@@ -46,13 +48,25 @@ export class TextInputCollector extends Collector<TextInputCollectorProps> {
     const patternMatches = (message: Message): boolean =>
       this.props.pattern ? this.props.pattern.test(message.content) : true
 
+    const passesOtherFilter = async (message: Message): Promise<boolean> =>
+      this.props.otherFilter ? await this.props.otherFilter(message.content) : true
+
     async function filter(message: Message): Promise<boolean> {
-      return (lengthIsLessThanMax(message) && lengthIsGreatherThanMin(message) && patternMatches(message))
+      return (
+        lengthIsLessThanMax(message) &&
+        lengthIsGreatherThanMin(message) &&
+        patternMatches(message) &&
+        await passesOtherFilter(message)
+      )
     }
 
     async function defaultOnFailedFilter(collector: MessageCollector, message: Message): Promise<void> {
       const replyAndPushToMessageStack = async (content: string): Promise<void> =>
         collector.pushMessageToMessageStack(await message.reply(content))
+
+      if (!(await passesOtherFilter(message))) {
+        replyAndPushToMessageStack('A mensagem enviada é inválida.')
+      }
 
       if (lengthIsGreatherThanMax(message)) {
         replyAndPushToMessageStack(`A mensagem é grande de mais! Ela precisa ter menos que ${maxLength} caracteres!`)
@@ -61,7 +75,7 @@ export class TextInputCollector extends Collector<TextInputCollectorProps> {
       else if (lengthIsLessThanMin(message)) {
         replyAndPushToMessageStack(`A mensagem é curta de mais! Ela precisa ter pelo menos ${minLength} caracteres!`)
       }
-      
+
       else if (!patternMatches(message)) {
         replyAndPushToMessageStack(`A mensagem não está nos padrões necessários!`)
       }
@@ -75,8 +89,9 @@ export class TextInputCollector extends Collector<TextInputCollectorProps> {
       .setProps({
         ...this.props,
         filter,
-        onFailedFilter: (collector, message) => {
+        onFailedFilter: async (collector, message) => {
           if (!this.props?.onFailedFilter) defaultOnFailedFilter(collector, message)
+          else if (!(await passesOtherFilter(message))) this.props.onFailedFilter(collector, message, TextInputCollectorOnFailedReasons.OtherFilterFailed)
           else if (lengthIsGreatherThanMax(message)) this.props.onFailedFilter(collector, message, TextInputCollectorOnFailedReasons.LengthIsGreatherThanMaximum)
           else if (lengthIsLessThanMin(message)) this.props.onFailedFilter(collector, message, TextInputCollectorOnFailedReasons.LengthIsLessThanMinimum)
           else if (!patternMatches(message)) this.props.onFailedFilter(collector, message, TextInputCollectorOnFailedReasons.PatternDoesNotMatch)
