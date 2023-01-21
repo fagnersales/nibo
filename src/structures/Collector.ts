@@ -1,8 +1,8 @@
-import { TextBasedChannel, User } from 'discord.js'
+import { GuildTextBasedChannel, User } from 'discord.js'
 
 export interface CollectorProps {
   target: User
-  location: TextBasedChannel
+  location: GuildTextBasedChannel
 }
 
 export abstract class Collector<TProps> {
