@@ -24,9 +24,7 @@ export class MessageCollector extends Collector<MessageCollectorRunOptions> {
   }
 
   public async bulkDeleteMessageStack(): Promise<void> {
-    console.log('bulk deleing', this.messageStack.size)
-    await this.location.bulkDelete(this.messageStack.map(({ id }) => id))
-      .catch(console.log)
+    await this.location.bulkDelete(this.messageStack.map(({ id }) => id)).catch(() => { })
   }
 
   public stop(): void {
