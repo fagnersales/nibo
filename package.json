@@ -1,0 +1,8 @@
+{
+  "name": "nibo",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/fagnersales/nibo.git",
+  "author": "Fagner Sales <fs.fagnersales@gmail.com>",
+  "license": "MIT"
+}
