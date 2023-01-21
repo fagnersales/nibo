@@ -7,7 +7,7 @@ It allows you to collect almost every type of information, from a ButtonInteract
 ### How to install
 ```ts
 yarn add niboh
-npm install **niboh**
+npm install niboh
 pnpm install niboh
 ```
 
@@ -56,3 +56,37 @@ if (buttonInteraction) {
 }
 ```
 the rest is only a example of message sent with some components to be collected :)
+
+### Combined Collectors
+You can combine collectors to run at the same time, but how can it be useful? You might want to run a `ButtonCollector` with a `TextInputCollector`, for example, imagine you want to ask a user to confirm an operation, so the user can confirm by clicking or writing a specific text.
+
+```ts
+import { ButtonSelectCollector, TextInputCollector, CombineCollectors } from 'niboh'
+
+const buttonSelectCollector = new ButtonSelectCollector({
+  location: message.channel,
+  target: someCoolInteraction.user
+}).setProps({ message })
+
+const textInputCollector = new TextInputCollector({
+  location: message.channel,
+  target: someCoolInteraction.user
+}).setProps({ pattern: /^confirm$/ })
+
+const combinedCollectors = new CombineCollectors([
+  buttonSelectCollector,
+  textInputCollector
+])
+
+const result = await combinedCollectors.run()
+
+if (result.isButtonSelectInteraction()) {
+  const buttonInteraction = result.value
+  //   ^ ? = ButtonInteraction | null
+}
+
+if (result.isTextInput()) {
+  const textInput = result.value
+  //   ^ ? = string | null
+}
+```
