@@ -9,7 +9,7 @@ export abstract class Collector<TProps> {
   public target!: CollectorProps['target']
   public location!: CollectorProps['location']
 
-  public props!: TProps
+  public props: TProps = {} as TProps
 
   public constructor(props: CollectorProps) {
     Object.assign(this, props)
