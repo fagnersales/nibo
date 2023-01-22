@@ -1,6 +1,6 @@
 {
   "name": "niboh",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "main": "dist/index.js",
   "types": "src/index.ts",
   "repository": "https://github.com/fagnersales/nibo.git",
