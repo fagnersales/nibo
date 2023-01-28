@@ -10,6 +10,8 @@
 
 ## Typedefs
 
+* [filter](typedefs/filter.md)
+* [MessageCollectorRunOptions](typedefs/messagecollectorrunoptions.md)
 * [CollectorProps](typedefs/collectorprops.md)
 * [otherFilter](typedefs/otherfilter.md)
 * [onFailedFilter](typedefs/onfailedfilter.md)

@@ -18,7 +18,9 @@ const textInputCollector = new TextInputCollector({
 
 const collectedText = await textInputCollector.run()
 
-console.log(`Collected: ${collectedText}`)
+if (collectedText) {
+  console.log(`Collected: ${collectedText}`)
+}
 ```
 
 ## Constructor
@@ -52,3 +54,23 @@ Sets the property for this collector to run with.
 | options   | [TextInputCollectorProps](../typedefs/textinputcollectorprops.md) | options to pass to the collector to run with | `{}`    |
 
 Returns: [TextInputCollector](textinputcollector.md)
+
+### .setTarget([target](https://discord.js.org/#/docs/discord.js/main/class/User))
+
+Sets a new target to this collector to run with.
+
+| Parameter | Type                                                             | Description                                     |
+| --------- | ---------------------------------------------------------------- | ----------------------------------------------- |
+| target    | [User](https://discord.js.org/#/docs/discord.js/main/class/User) | The new user to be targetted for this collector |
+
+Returns: [TextInputCollectorProps](../typedefs/textinputcollectorprops.md)
+
+### .setLocation([location](https://discord.js.org/#/docs/discord.js/main/typedef/GuildTextBasedChannel))
+
+Sets a new location to this collector to run with.
+
+| Parameter | Type                                                                                                 | Description                                 |
+| --------- | ---------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| location  | [GuildTextBasedChannel](https://discord.js.org/#/docs/discord.js/main/typedef/GuildTextBasedChannel) | The new location to this collector run with |
+
+Returns: [TextInputCollectorProps](../typedefs/textinputcollectorprops.md)
