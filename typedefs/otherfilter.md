@@ -2,7 +2,7 @@
 
 ## Types
 
-* [Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global\_Objects/Function)
+* ****[**Function**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global\_Objects/Function)****
 
 ## Parameters
 
